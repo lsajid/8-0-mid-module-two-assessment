@@ -82,15 +82,16 @@ function checkIfAnyMovieHasRating(movies, rating = "G") {
       // Toy Story 4
     };
  */
-function findById(id) {
-  
-  let ans = movies.find(el =>{
-    if (el.imdbID === id){
-      return el.title
-    } else {
-      return null;
-    }
-  })
+function findById(movies, id) {
+
+  if (movies.length === 0){
+    throw `Error`
+  }
+
+  let ans = movies.find(el => el.imdbID === id ? el.title : null )
+  if(!ans){
+    return null
+  } 
   return ans
 }
 
@@ -116,7 +117,20 @@ function findById(id) {
  *  filterByGenre(movies, "Horror")
  *  //> []
  */
-function filterByGenre() {}
+function filterByGenre(movies, genre) {
+  if(movies.length === 0){
+    throw `Error`
+  }
+
+  checkFor = genre[0].toUpperCase() + genre.slice(1).toLowerCase()
+  
+  let answer = movies.filter( (el) => {
+    if(el["genre"].includes(checkFor)){
+      return el.title
+    }      
+ })
+ return answer
+}
 
 /**
  * getAllMoviesReleasedAtOrBeforeYear()
@@ -142,7 +156,18 @@ function filterByGenre() {}
       }
     ];
  */
-function getAllMoviesReleasedAtOrBeforeYear() {}
+function getAllMoviesReleasedAtOrBeforeYear(movies, year) {
+  if(!movies.length){
+    throw `Error`;
+  }
+  return movies.filter((el) => {
+    checkFor = el.released.split(" ")
+
+    if(checkFor[2] <= year){
+      return el
+    }
+  })
+}
 
 /**
  * getRottenTomatoesScoreByMovie()
@@ -168,8 +193,21 @@ function getAllMoviesReleasedAtOrBeforeYear() {}
       { "James and the Giant Peach": "91%" },
     ];
  */
-function getRottenTomatoesScoreByMovie() {}
+function getRottenTomatoesScoreByMovie(movies) {
+  if(!movies.length) {
+    throw `Error`
+  }
+return movies.map(el =>{
+  let percentRatings = el.ratings.find(rate => {
+    return rate.source === "Rotten Tomatoes"
+  })
+  let vessel = {};
+  vessel[el.title] = percentRatings.value;
+  return vessel
+})
+}
 
+getRottenTomatoesScoreByMovie(exampleMovies)
 // Do not change anything below this line.
 module.exports = {
   getAllMovieTitles,
